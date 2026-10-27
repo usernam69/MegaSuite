@@ -1,0 +1,18 @@
+# Build files
+build/
+bin/
+cmake-build-*/
+.cache/
+*.geode
+*.dll
+*.pdb
+*.obj
+*.lib
+
+# References folder
+references/
+
+# IDE files
+.vscode/
+.vs/
+*.user

@@ -4,35 +4,40 @@
 
 namespace megasuite::theme {
 
-    // Classic MegaHack dark palette & neon green accents
-    inline const ccColor3B BackgroundDark    = ccc3(16, 17, 22);
-    inline const ccColor3B WindowPanel       = ccc3(24, 25, 33);
-    inline const ccColor3B HeaderBar         = ccc3(20, 21, 28);
-    inline const ccColor3B CardBackground    = ccc3(30, 32, 42);
-    inline const ccColor3B CardBorder        = ccc3(45, 48, 62);
+    // Authentic MegaHack v7/v8 Dark Charcoal & Emerald Green styling
+    inline const ccColor3B BackgroundDark    = ccc3(12, 12, 14);     // Window frame backdrop
+    inline const ccColor3B WindowPanel       = ccc3(18, 18, 22);     // Main window body
+    inline const ccColor3B HeaderBar         = ccc3(14, 14, 17);     // Top title & drag header
+    inline const ccColor3B SidebarBg         = ccc3(16, 16, 20);     // Left category column
     
-    inline const ccColor3B AccentGreen       = ccc3(0, 255, 127); // #00FF7F
-    inline const ccColor3B AccentGreenDark   = ccc3(0, 180, 90);
-    inline const ccColor3B AccentGlow        = ccc3(80, 255, 170);
+    // Checkbox & list row styling (MegaHack checkbox list)
+    inline const ccColor3B RowBgDefault      = ccc3(22, 22, 26);     // Row base
+    inline const ccColor3B RowBgHover        = ccc3(30, 30, 36);     // Row hover
+    inline const ccColor3B RowBorder         = ccc3(36, 36, 44);     // Border separator
+    inline const ccColor3B CheckboxBg        = ccc3(28, 28, 34);     // Unchecked box background
+    inline const ccColor3B CheckboxBorder    = ccc3(60, 60, 72);     // Unchecked border
+    
+    // Signature MegaHack Emerald Accent
+    inline const ccColor3B AccentGreen       = ccc3(0, 255, 128);    // MegaHack vibrant green (#00FF80)
+    inline const ccColor3B AccentGreenDark   = ccc3(0, 190, 95);     // Darker green border/active
+    inline const ccColor3B AccentGreenDim    = ccc3(15, 60, 35);     // Subdued green for row active tint
 
-    inline const ccColor3B ToggleTrackOff    = ccc3(40, 42, 54);
-    inline const ccColor3B ToggleKnobOff     = ccc3(120, 125, 140);
-    inline const ccColor3B ToggleKnobOn      = ccc3(255, 255, 255);
+    // Typography
+    inline const ccColor3B TextPrimary       = ccc3(240, 240, 245);
+    inline const ccColor3B TextSecondary     = ccc3(160, 160, 175);
+    inline const ccColor3B TextMuted         = ccc3(100, 100, 115);
+    inline const ccColor3B TextAccent        = ccc3(0, 255, 128);
 
-    inline const ccColor3B TextPrimary       = ccc3(248, 250, 252);
-    inline const ccColor3B TextSecondary     = ccc3(148, 163, 184);
-    inline const ccColor3B TextMuted         = ccc3(100, 110, 125);
-    inline const ccColor3B TextAccent        = ccc3(0, 255, 127);
+    // Controls
+    inline const ccColor3B SliderTrack       = ccc3(32, 32, 40);
+    inline const ccColor3B SliderFill        = ccc3(0, 255, 128);
 
-    inline const ccColor3B SliderTrack       = ccc3(38, 40, 52);
-    inline const ccColor3B SliderThumb       = ccc3(0, 255, 127);
-
-    // Layout Metrics
-    constexpr float WindowWidth  = 540.0f;
-    constexpr float WindowHeight = 330.0f;
-    constexpr float HeaderHeight = 36.0f;
-    constexpr float TabBarHeight = 30.0f;
-    constexpr float ContentWidth = WindowWidth - 20.0f;
-    constexpr float ContentHeight= WindowHeight - HeaderHeight - TabBarHeight - 14.0f;
+    // Layout Metrics (MegaHack standard multi-column layout)
+    constexpr float WindowWidth  = 580.0f;
+    constexpr float WindowHeight = 350.0f;
+    constexpr float HeaderHeight = 32.0f;
+    constexpr float SidebarWidth = 135.0f;
+    constexpr float ContentWidth = WindowWidth - SidebarWidth - 14.0f;
+    constexpr float ContentHeight= WindowHeight - HeaderHeight - 14.0f;
 
 } // namespace megasuite::theme

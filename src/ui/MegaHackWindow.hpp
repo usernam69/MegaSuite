@@ -11,17 +11,17 @@ namespace megasuite::ui {
         CCNode* m_windowNode = nullptr;
         CCLayerColor* m_windowBg = nullptr;
         CCNode* m_contentArea = nullptr;
-        CCMenu* m_tabMenu = nullptr;
-        std::vector<MegaTabButton*> m_tabButtons;
+        CCMenu* m_sidebarMenu = nullptr;
+        std::vector<MegaSidebarItem*> m_sidebarButtons;
         Category m_currentCategory = Category::QoL;
         bool m_isDragging = false;
         CCPoint m_dragOffset;
 
         bool init();
         void setupUI();
-        void setupTabs();
+        void setupSidebar();
         void loadCategory(Category cat);
-        void onTabSelected(CCObject* sender);
+        void onCategorySelected(CCObject* sender);
         void onClose(CCObject* sender);
 
         // Touch handling

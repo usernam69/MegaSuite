@@ -1,5 +1,4 @@
 #include "MegaHackWindow.hpp"
-#include <algorithm>
 
 namespace megasuite::ui {
 
@@ -16,8 +15,7 @@ namespace megasuite::ui {
     }
 
     bool MegaHackWindow::init() {
-        // Semi-transparent backdrop
-        if (!CCLayerColor::initWithColor(ccc4(0, 0, 0, 140))) {
+        if (!CCLayerColor::initWithColor(ccc4(0, 0, 0, 150))) {
             return false;
         }
 
@@ -26,94 +24,98 @@ namespace megasuite::ui {
 
         auto winSize = CCDirector::get()->getWinSize();
 
-        // Container Window Node (scaled and centered)
+        // Main floating MegaHack container
         m_windowNode = CCNode::create();
         m_windowNode->setContentSize({theme::WindowWidth, theme::WindowHeight});
         m_windowNode->setAnchorPoint({0.5f, 0.5f});
         m_windowNode->setPosition({winSize.width / 2.0f, winSize.height / 2.0f});
         addChild(m_windowNode);
 
-        // Window background (dark acrylic)
-        m_windowBg = CCLayerColor::create(ccc4(24, 25, 33, 245), theme::WindowWidth, theme::WindowHeight);
+        // Window background (Dark charcoal)
+        m_windowBg = CCLayerColor::create(ccc4(18, 18, 22, 250), theme::WindowWidth, theme::WindowHeight);
         m_windowBg->setPosition({0, 0});
         m_windowNode->addChild(m_windowBg);
 
-        // Subtle outer border
-        auto border = CCLayerColor::create(ccc4(45, 48, 62, 255), theme::WindowWidth, 1.0f);
+        // Outer crisp border
+        auto border = CCLayerColor::create(ccc4(40, 40, 50, 255), theme::WindowWidth, 1.0f);
         border->setPosition({0, 0});
         m_windowNode->addChild(border);
 
         setupUI();
-        setupTabs();
+        setupSidebar();
         loadCategory(Category::QoL);
 
         return true;
     }
 
     void MegaHackWindow::setupUI() {
-        // Header
+        // Drag header bar
         auto header = MegaHeader::create(
             "MegaSuite", "v1.0.0",
-            [this]() { hide(); },
-            nullptr
+            [this]() { hide(); }
         );
         header->setPosition({0, theme::WindowHeight - theme::HeaderHeight});
         m_windowNode->addChild(header);
 
-        // Tab menu container
-        auto tabBg = CCLayerColor::create(ccc4(20, 21, 28, 200), theme::WindowWidth, theme::TabBarHeight);
-        tabBg->setPosition({0, theme::WindowHeight - theme::HeaderHeight - theme::TabBarHeight});
-        m_windowNode->addChild(tabBg);
+        // Left sidebar column
+        auto sideBg = CCLayerColor::create(ccc4(15, 15, 18, 255), theme::SidebarWidth, theme::WindowHeight - theme::HeaderHeight);
+        sideBg->setPosition({0, 0});
+        m_windowNode->addChild(sideBg);
 
-        m_tabMenu = CCMenu::create();
-        m_tabMenu->setPosition({0, 0});
-        tabBg->addChild(m_tabMenu);
+        // Vertical divider between sidebar and content
+        auto divider = CCLayerColor::create(ccc4(35, 35, 42, 255), 1.0f, theme::WindowHeight - theme::HeaderHeight);
+        divider->setPosition({theme::SidebarWidth, 0});
+        m_windowNode->addChild(divider);
 
-        // Content Area
+        m_sidebarMenu = CCMenu::create();
+        m_sidebarMenu->setPosition({0, 0});
+        sideBg->addChild(m_sidebarMenu);
+
+        // Content Area (Multi-column checkbox grid)
         m_contentArea = CCNode::create();
         m_contentArea->setContentSize({theme::ContentWidth, theme::ContentHeight});
-        m_contentArea->setPosition({10.0f, 10.0f});
+        m_contentArea->setPosition({theme::SidebarWidth + 8.0f, 6.0f});
         m_windowNode->addChild(m_contentArea);
     }
 
-    void MegaHackWindow::setupTabs() {
-        struct TabDef {
+    void MegaHackWindow::setupSidebar() {
+        struct CatDef {
             std::string name;
             Category cat;
         };
 
-        std::vector<TabDef> tabs = {
-            {"QoL Hacks", Category::QoL},
-            {"Bugfixes",  Category::Bugfixes},
-            {"DVD Mode",  Category::DVDMode},
-            {"API Hub",   Category::APIs},
-            {"Settings",  Category::Settings}
+        std::vector<CatDef> categories = {
+            {"Bypass & QoL", Category::QoL},
+            {"Bugfixes",     Category::Bugfixes},
+            {"DVD Mode",     Category::DVDMode},
+            {"Developer API",Category::APIs},
+            {"Settings",     Category::Settings}
         };
 
-        float startX = 50.0f;
-        float spacing = 105.0f;
+        float startY = (theme::WindowHeight - theme::HeaderHeight) - 24.0f;
+        float spacing = 36.0f;
 
-        for (size_t i = 0; i < tabs.size(); ++i) {
-            auto btn = MegaTabButton::create(
-                tabs[i].name, this, menu_selector(MegaHackWindow::onTabSelected)
+        for (size_t i = 0; i < categories.size(); ++i) {
+            auto item = MegaSidebarItem::create(
+                categories[i].name, this, menu_selector(MegaHackWindow::onCategorySelected)
             );
-            btn->setTag(static_cast<int>(tabs[i].cat));
-            btn->setPosition({startX + i * spacing, theme::TabBarHeight / 2.0f});
-            m_tabMenu->addChild(btn);
-            m_tabButtons.push_back(btn);
+            item->setTag(static_cast<int>(categories[i].cat));
+            item->setPosition({(theme::SidebarWidth - 8.0f) / 2.0f + 4.0f, startY - i * spacing});
+            m_sidebarMenu->addChild(item);
+            m_sidebarButtons.push_back(item);
         }
 
-        if (!m_tabButtons.empty()) {
-            m_tabButtons[0]->setActive(true);
+        if (!m_sidebarButtons.empty()) {
+            m_sidebarButtons[0]->setActive(true);
         }
     }
 
-    void MegaHackWindow::onTabSelected(CCObject* sender) {
-        auto btn = static_cast<MegaTabButton*>(sender);
-        for (auto* t : m_tabButtons) {
-            t->setActive(t == btn);
+    void MegaHackWindow::onCategorySelected(CCObject* sender) {
+        auto item = static_cast<MegaSidebarItem*>(sender);
+        for (auto* btn : m_sidebarButtons) {
+            btn->setActive(btn == item);
         }
-        Category cat = static_cast<Category>(btn->getTag());
+        Category cat = static_cast<Category>(item->getTag());
         loadCategory(cat);
     }
 
@@ -123,37 +125,38 @@ namespace megasuite::ui {
 
         auto settings = ModuleManager::get()->getCategorySettings(cat);
 
-        // 2-column grid layout
-        float colWidth = 255.0f;
-        float rowHeight = 44.0f;
-        float padding = 8.0f;
-        float startY = theme::ContentHeight - rowHeight - 4.0f;
+        // Authentic MegaHack 2-column checkbox/toggle list
+        float colWidth = 204.0f;
+        float rowHeight = 36.0f;
+        float paddingX = 8.0f;
+        float paddingY = 4.0f;
+        float startY = theme::ContentHeight - rowHeight;
 
         for (size_t i = 0; i < settings.size(); ++i) {
             const auto& s = settings[i];
             int col = i % 2;
             int row = i / 2;
 
-            float posX = col * (colWidth + padding);
-            float posY = startY - row * (rowHeight + padding);
+            float posX = col * (colWidth + paddingX);
+            float posY = startY - row * (rowHeight + paddingY);
 
             if (s.isBool) {
-                auto toggle = MegaToggle::create(
+                auto checkbox = MegaCheckboxRow::create(
                     s.id, s.name, s.description, s.boolVal,
                     [s](bool val) {
                         ModuleManager::get()->setBool(s.id, val);
                     }
                 );
-                toggle->setPosition({posX, posY});
-                m_contentArea->addChild(toggle);
+                checkbox->setPosition({posX, posY});
+                m_contentArea->addChild(checkbox);
             } else {
-                auto slider = MegaSlider::create(
+                auto slider = MegaSliderRow::create(
                     s.id, s.name, s.minFloat, s.maxFloat, s.floatVal, s.format,
                     [s](float val) {
                         ModuleManager::get()->setFloat(s.id, val);
                     }
                 );
-                slider->setPosition({posX, posY});
+                slider->setPosition({posX, posY - 6.0f});
                 m_contentArea->addChild(slider);
             }
         }
@@ -177,10 +180,9 @@ namespace megasuite::ui {
             return true;
         }
 
-        // Swallows all clicks inside the window or backdrop
+        // Click outside closes window
         CCRect windowRect(0, 0, theme::WindowWidth, theme::WindowHeight);
         if (!windowRect.containsPoint(localPos)) {
-            // Click outside window closes it
             hide();
         }
         return true;
@@ -201,9 +203,9 @@ namespace megasuite::ui {
         setVisible(true);
         setTouchEnabled(true);
         if (m_windowNode) {
-            m_windowNode->setScale(0.85f);
+            m_windowNode->setScale(0.9f);
             m_windowNode->stopAllActions();
-            m_windowNode->runAction(CCEaseBackOut::create(CCScaleTo::create(0.2f, 1.0f)));
+            m_windowNode->runAction(CCEaseBackOut::create(CCScaleTo::create(0.18f, 1.0f)));
         }
         runAction(CCFadeIn::create(0.15f));
     }
@@ -213,7 +215,7 @@ namespace megasuite::ui {
         if (m_windowNode) {
             m_windowNode->stopAllActions();
             m_windowNode->runAction(CCSequence::createWithTwoActions(
-                CCEaseExponentialIn::create(CCScaleTo::create(0.15f, 0.85f)),
+                CCEaseExponentialIn::create(CCScaleTo::create(0.12f, 0.9f)),
                 CCCallFunc::create(this, callfunc_selector(CCNode::removeFromParent))
             ));
         } else {

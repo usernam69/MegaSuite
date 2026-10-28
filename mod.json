@@ -1,212 +1,142 @@
 {
-	"geode": "5.5.3",
+	"geode": "5.6.1",
 	"version": "v1.0.0",
 	"gd": {
-		"win": "2.2081",
-		"android": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081"
+		"win": "2.2081"
 	},
-	"id": "dovi.megamod",
+	"id": "dovi.megasuite",
 	"name": "MegaSuite",
 	"developer": "Dovi",
-	"description": "Ultimate all-in-one MegaHack-styled mod suite combining QOLMod, DVD Mode, comprehensive Bugfixes, and Developer APIs.",
-	"early-load": true,
-	"links": {
-		"source": "https://github.com/dovi/MegaSuite",
-		"community": "https://discord.gg/geode"
-	},
-	"tags": [
-		"gameplay",
-		"utility",
-		"bugfix",
-		"api",
-		"customization",
-		"cheat",
-		"universal"
-	],
+	"description": "One menu for everything: QoL hacks, bugfixes and DVD Mode in a single MegaHack-style window. Press TAB to open.",
 	"settings": {
-		"menu-keybind": {
-			"name": "Menu Toggle Keybind",
-			"description": "Key used to toggle the MegaHack-style overlay menu in-game and in menus",
-			"type": "string",
-			"default": "Tab"
-		},
-		"ui-accent-color": {
-			"name": "UI Accent Color",
-			"description": "MegaHack neon green or customized highlight accent",
-			"type": "string",
-			"default": "#00FF7F"
-		},
-		"ui-scale": {
-			"name": "Menu Scale",
-			"description": "Scale of the floating MegaHack UI window",
-			"type": "float",
-			"default": 1.0,
-			"min": 0.6,
-			"max": 1.5,
-			"control": {
-				"slider": true,
-				"arrows": true,
-				"arrow-step": 0.05,
-				"slider-step": 0.01
-			}
-		},
-		"ui-opacity": {
-			"name": "Menu Window Opacity",
-			"description": "Background acrylic transparency level",
-			"type": "float",
-			"default": 0.94,
-			"min": 0.4,
-			"max": 1.0,
-			"control": {
-				"slider": true,
-				"arrows": true,
-				"arrow-step": 0.05,
-				"slider-step": 0.01
-			}
-		},
-		"dvd-enable": {
-			"name": "DVD Mode: Enable",
-			"description": "Makes popup dialogs bounce diagonally around screen borders like a DVD screensaver",
-			"type": "bool",
-			"default": false
-		},
-		"dvd-speed": {
-			"name": "DVD Mode: Speed",
-			"description": "Bouncing velocity of DVD popups",
-			"type": "float",
-			"default": 1.0,
-			"min": 0.2,
-			"max": 5.0,
-			"control": {
-				"slider": true,
-				"arrows": true,
-				"arrow-step": 0.1,
-				"slider-step": 0.05
-			}
-		},
-		"dvd-no-triggers": {
-			"name": "DVD Mode: Exclude Triggers",
-			"description": "Prevent editor trigger dialogues from bouncing",
-			"type": "bool",
-			"default": true
-		},
-		"dvd-heavy": {
-			"name": "DVD Mode: Heavy Popups",
-			"description": "Larger popups bounce slower while smaller dialogs bounce faster",
-			"type": "bool",
-			"default": true
-		},
 		"speedhack-enabled": {
-			"name": "Speedhack: Enabled",
-			"description": "Toggle custom game speed multiplier",
 			"type": "bool",
+			"name": "Speedhack",
+			"description": "Scale the gameplay delta time.",
 			"default": false
 		},
 		"speedhack-speed": {
-			"name": "Speedhack: Multiplier",
-			"description": "Game speed multiplier (1.0 = normal speed)",
 			"type": "float",
+			"name": "Speedhack Speed",
+			"description": "Gameplay speed multiplier used by the speedhack.",
 			"default": 1.0,
-			"min": 0.05,
-			"max": 5.0,
-			"control": {
-				"slider": true,
-				"arrows": true,
-				"arrow-step": 0.05,
-				"slider-step": 0.01
-			}
+			"min": 0.1,
+			"max": 5.0
 		},
-		"speedhack-audio": {
-			"name": "Speedhack: Pitch Audio",
-			"description": "Adjust audio playback rate in sync with speedhack multiplier",
+		"noclip": {
 			"type": "bool",
+			"name": "Noclip",
+			"description": "Never die from hitting objects.",
 			"default": false
 		},
-		"startpos-switcher": {
-			"name": "StartPos Switcher",
-			"description": "Quickly switch between start positions in levels with arrow keys or UI buttons",
-			"type": "bool",
-			"default": true
-		},
 		"show-hitboxes": {
-			"name": "Show Hitboxes",
-			"description": "Display object and player hitboxes during gameplay and practice mode",
 			"type": "bool",
+			"name": "Show Hitboxes",
+			"description": "Toggles the game's debug hitbox drawing.",
+			"default": false
+		},
+		"instant-respawn": {
+			"type": "bool",
+			"name": "Instant Respawn",
+			"description": "Skip the death delay and respawn immediately.",
 			"default": false
 		},
 		"practice-music-sync": {
+			"type": "bool",
 			"name": "Practice Music Sync",
-			"description": "Syncs normal level music to your practice mode attempt rather than stay on practice track",
-			"type": "bool",
-			"default": true
-		},
-		"instant-respawn": {
-			"name": "Instant Respawn",
-			"description": "Removes death delay and immediately restarts the attempt",
-			"type": "bool",
+			"description": "Keep the song synced in practice mode.",
 			"default": false
 		},
-		"noclip": {
-			"name": "Noclip / Invincibility",
-			"description": "Prevents death on hazard contact (for practice and testing)",
+		"startpos-switcher": {
 			"type": "bool",
+			"name": "StartPos Switcher",
+			"description": "Use the left and right arrow keys to cycle start positions.",
 			"default": false
 		},
-		"bugfix-practice-pulse": {
-			"name": "Bugfix: Practice Music Sync Pulsing",
-			"description": "Fixes objects in main level songs failing to pulse with Practice Music Sync active",
+		"fix-practice-music-pulse": {
 			"type": "bool",
+			"name": "Fix Practice Music Pulse",
+			"description": "Fixes the audio pulse effect breaking while practice music sync is on.",
 			"default": true
 		},
-		"bugfix-p2-wave-trail": {
-			"name": "Bugfix: Player 2 Wave Trail",
-			"description": "Fixes Player 2 dual wave trail visually glitching or failing to render",
+		"fix-dual-wave-trail": {
 			"type": "bool",
+			"name": "Fix Dual Wave Trail",
+			"description": "Fixes the player 2 wave trail disappearing when leaving dual mode.",
 			"default": true
 		},
-		"bugfix-startpos-mirror": {
-			"name": "Bugfix: StartPos Mirror Portal",
-			"description": "Fixes StartPos ignoring mirror mode portal direction",
+		"fix-dash-particles": {
 			"type": "bool",
+			"name": "Fix Dash Particles",
+			"description": "Restores the pre-2.2 ship and UFO click particle position.",
 			"default": true
 		},
-		"bugfix-mini-swing": {
-			"name": "Bugfix: Mini Swing Icon",
-			"description": "Fixes mini swing displaying default cube icon instead of player selection",
+		"fix-trigger-wave-particles": {
 			"type": "bool",
+			"name": "Fix Trigger Wave Particles",
+			"description": "Fixes wave particles spawned by a show/hide trigger being cleared.",
 			"default": true
 		},
-		"bugfix-dash-particles": {
-			"name": "Bugfix: Dash Orb Particles",
-			"description": "Fixes dash orb particles appearing with an incorrect pixel offset",
+		"fix-startpos-mirror": {
 			"type": "bool",
+			"name": "Fix StartPos Mirror",
+			"description": "Applies the start position's mirror mode setting on respawn.",
 			"default": true
 		},
-		"bugfix-show-trigger-particles": {
-			"name": "Bugfix: Show Trigger Wave Particles",
-			"description": "Fixes wave trail showing ship/ufo thruster particles after hide/show triggers",
+		"fix-mini-swing": {
 			"type": "bool",
+			"name": "Fix Mini Swing",
+			"description": "Fixes the swing copter frame being wrong while mini.",
 			"default": true
 		},
-		"api-level-id": {
-			"name": "API: Level ID API",
-			"description": "Exposes level and song IDs cleanly to other mods and UI labels",
+		"dvd-enable": {
 			"type": "bool",
+			"name": "DVD Mode",
+			"description": "Makes every popup bounce around the screen forever.",
+			"default": false
+		},
+		"dvd-speed": {
+			"type": "float",
+			"name": "DVD Bounce Speed",
+			"description": "How fast popups bounce around the screen.",
+			"default": 1.0,
+			"min": 0.2,
+			"max": 3.0
+		},
+		"dvd-no-triggers": {
+			"type": "bool",
+			"name": "DVD Skip Trigger Popups",
+			"description": "Keep editor trigger and color popups still.",
 			"default": true
 		},
-		"api-node-ids": {
-			"name": "API: Node IDs Inspector",
-			"description": "Auto-labels and logs cocos2d-x UI node hierarchies for debugging and mod compatibility",
+		"dvd-heavy": {
 			"type": "bool",
-			"default": true
+			"name": "DVD Heavy Popups",
+			"description": "Heavier popups bounce slower, like the original mod.",
+			"default": false
 		},
-		"api-persistence": {
-			"name": "API: Persistence & Settings API",
-			"description": "Safe fast key-value persistence layer for cross-mod storage",
-			"type": "bool",
-			"default": true
+		"ui-scale": {
+			"type": "float",
+			"name": "Menu Scale",
+			"description": "Scale of the MegaSuite window.",
+			"default": 1.0,
+			"min": 0.7,
+			"max": 1.4
+		},
+		"ui-opacity": {
+			"type": "float",
+			"name": "Menu Opacity",
+			"description": "Opacity of the MegaSuite window background.",
+			"default": 0.94,
+			"min": 0.4,
+			"max": 1.0
 		}
-	}
+	},
+	"tags": [
+		"cheat",
+		"gameplay",
+		"utility",
+		"customization",
+		"universal"
+	]
 }

@@ -1,45 +1,87 @@
 #pragma once
 
 #include <Geode/Geode.hpp>
+
 #include <string>
-#include <vector>
-#include <functional>
-#include <memory>
+#include <string_view>
 
 using namespace geode::prelude;
 
-namespace megasuite {
+namespace ms {
 
-    inline ccColor3B parseHexColor(const std::string& hexStr) {
-        std::string hex = hexStr;
-        if (!hex.empty() && hex[0] == '#') {
-            hex = hex.substr(1);
-        }
-        if (hex.length() != 6) {
-            return ccc3(0, 255, 127); // Default MegaHack neon green
-        }
-        try {
-            int r = std::stoi(hex.substr(0, 2), nullptr, 16);
-            int g = std::stoi(hex.substr(2, 2), nullptr, 16);
-            int b = std::stoi(hex.substr(4, 2), nullptr, 16);
-            return ccc3(static_cast<GLubyte>(r), static_cast<GLubyte>(g), static_cast<GLubyte>(b));
-        } catch (...) {
-            return ccc3(0, 255, 127);
-        }
+// ---------------------------------------------------------------------------
+// settings access
+// ---------------------------------------------------------------------------
+
+inline bool enabled(std::string_view key) {
+    return Mod::get()->getSettingValue<bool>(key);
+}
+
+inline void setEnabled(std::string_view key, bool value) {
+    Mod::get()->setSettingValue<bool>(key, value);
+}
+
+inline float getFloat(std::string_view key, float fallback) {
+    float v = Mod::get()->getSettingValue<float>(key);
+    if (v != v) { // NaN
+        return fallback;
     }
+    return v;
+}
 
-    template<typename T>
-    inline T getSetting(const std::string& key, T defaultValue) {
-        auto mod = Mod::get();
-        if (!mod) return defaultValue;
-        return mod->getSettingValue<T>(key);
+inline void setFloat(std::string_view key, float value) {
+    Mod::get()->setSettingValue<float>(key, value);
+}
+
+inline float speedhackMult() {
+    if (!enabled("speedhack-enabled")) {
+        return 1.f;
     }
+    float v = getFloat("speedhack-speed", 1.f);
+    return v > 0.01f ? v : 1.f;
+}
 
-    template<typename T>
-    inline void setSetting(const std::string& key, T value) {
-        auto mod = Mod::get();
-        if (!mod) return;
-        mod->setSettingValue<T>(key, value);
-    }
+inline float dvdSpeedMult() {
+    float v = getFloat("dvd-speed", 1.f);
+    return v > 0.01f ? v : 1.f;
+}
 
-} // namespace megasuite
+inline float uiScale() {
+    float v = getFloat("ui-scale", 1.f);
+    if (v < 0.5f) v = 0.5f;
+    if (v > 1.6f) v = 1.6f;
+    return v;
+}
+
+inline float uiOpacity() {
+    float v = getFloat("ui-opacity", 0.94f);
+    if (v < 0.f) v = 0.f;
+    if (v > 1.f) v = 1.f;
+    return v;
+}
+
+// ---------------------------------------------------------------------------
+// MegaHack-ish theme
+// ---------------------------------------------------------------------------
+
+inline ccColor4B colDim()      { return ccc4(0, 0, 0, 170); }
+inline ccColor4B colSidebar()  { return ccc4(20, 24, 22, 255); }
+inline ccColor4B colContent()  { return ccc4(12, 14, 13, 255); }
+inline ccColor4B colHeader()   { return ccc4(0, 110, 68, 255); }
+inline ccColor4B colRowAlt()   { return ccc4(28, 33, 30, 120); }
+
+inline ccColor3B colAccent()   { return ccc3(0, 240, 120); }
+inline ccColor3B colText()     { return ccc3(228, 236, 231); }
+inline ccColor3B colTextDim()  { return ccc3(130, 145, 137); }
+inline ccColor3B colBgTint()   { return ccc3(16, 18, 17); }
+
+// ---------------------------------------------------------------------------
+// floating menu
+// ---------------------------------------------------------------------------
+
+void openMenu();
+void closeMenu();
+void toggleMenu();
+bool isMenuOpen();
+
+} // namespace ms

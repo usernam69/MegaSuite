@@ -1,4 +1,4 @@
-name: Build Geode Mod
+name: Build MegaSuite
 
 on:
   workflow_dispatch:
@@ -6,55 +6,36 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: write
+
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - name: Windows
-          os: windows-latest
-
-        - name: macOS
-          os: macos-latest
-
-        - name: iOS
-          os: macos-latest
-          target: iOS
-
-        - name: Android32
-          os: ubuntu-latest
-          target: Android32
-
-        - name: Android64
-          os: ubuntu-latest
-          target: Android64
-
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+  windows:
+    name: Windows
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Build the mod
+        id: build
         uses: geode-sdk/build-geode-mod@main
         with:
-          combine: true
-          target: ${{ matrix.config.target }}
-          cli: nightly
+          sdk: given
+          target: Win64
+          combine: false
 
-  package:
-    name: Package builds
-    runs-on: ubuntu-latest
-    needs: ['build']
-
-    steps:
-      - uses: geode-sdk/build-geode-mod/combine@main
-        id: build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          cli: nightly
+          name: MegaSuite-Windows
+          path: ${{ steps.build.outputs.build-output }}/*.geode
 
-      - uses: actions/upload-artifact@v4
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
         with:
-          name: MegaSuite-geode
-          path: ${{ steps.build.outputs.build-output }}
+          tag_name: build-${{ github.run_number }}
+          name: MegaSuite build ${{ github.run_number }}
+          body: Automatic Windows build of MegaSuite.
+          files: ${{ steps.build.outputs.build-output }}/*.geode
+          fail_on_unmatched_files: true
